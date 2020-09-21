@@ -6,11 +6,29 @@ import FoodBox from './components/FoodBox'
 
 function App() {
   const [food, setfood] = useState(foods)
+  const [query, setquery] = useState('')
+  const [results, setresults] = useState()
   const [form, setform] = useState(false)
   const [name, setname] = useState('Turkey')
   const [image, setimage] = useState('https://upload.wikimedia.org/wikipedia/commons/4/4d/Wild_turkey_eastern_us.jpg')
   const [calories, setcalories] = useState(100)
-
+    
+  useEffect(() => {
+    setfood(foods)
+  }, [])
+  
+  async function searchQuery(value){
+    await setquery(value)
+  }
+  
+  useEffect(() => {
+    const search = food.filter(item => {
+      return item.name.toLowerCase().includes(query.toLowerCase())
+    })
+    setresults(search)
+    console.log(results)
+  }, [query])
+  
   const handleFormSubmit = (e) => {
     e.preventDefault()
     setfood([...food, {name, image, calories}])
@@ -18,14 +36,8 @@ function App() {
     setimage('')
     setcalories(0)
 }
-  
-  
-  useEffect(() => {
-      setfood(foods)
-  }, [])
 
-
-  return food ? (
+  return results ? (
     <div className="App">
       <button onClick={() => setform(!form)}>Add Food</button>
       {form ? (
@@ -53,11 +65,17 @@ function App() {
           value={calories}
           onChange={e => setcalories(e.target.value)}
         />
-
         <button>Submit</button>
       </form>
       ) : ''}
-      {food.map((el, ind) => (
+      <label>Search:</label>
+      <input
+        type='text'
+        name='query'
+        value={query}
+        onChange={e => searchQuery(e.target.value)}
+      />
+      {results.map((el, ind) => (
         <FoodBox key={ind} food={el}></FoodBox>
       ))}
     </div>
