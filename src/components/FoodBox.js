@@ -21,10 +21,11 @@ function FoodBox({foods}) {
         return item.name.toLowerCase().includes(query.toLowerCase())
       })
       setresults(search)
-    }, [query])
+    }, [query, food])
     
     const handleFormSubmit = (e) => {
       e.preventDefault()
+      console.log(name)
       setfood([...food, {name, image, calories}])
       setname('')
       setimage('')
@@ -104,7 +105,7 @@ function FoodBox({foods}) {
                       <div className="media-right">
                         <div className="field has-addons">
                             <div className="control">
-                                <input type="number" className="input" onChange={e => setquantity(e.target.value)}/>
+                                <input type="number" className="input" defaultValue={0} min={0} onChange={e => setquantity(e.target.value)}/>
                             </div>
                             <div className="control">
                                 <button className="button is-info" onClick={() => addToTable(ind)}>+</button>
